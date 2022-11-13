@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>开发者日记</title>
+  #include("/static/themes/diaryhub/inc/main.html")
+  <style>
+      html, body {
+          margin: 0;
+          width: 100%;
+          height: 100%;
+      }
+
+
+      .page-wrap {
+          width: 800px;
+          height: 100%;
+          padding: 16px;
+          box-sizing: border-box;
+          background: #fff;
+          margin: 0 auto;
+      }
+
+      .nav {
+          height: 40px;
+          width: 94%;
+          margin: auto;
+      }
+
+      .control-wrap {
+          height: 38px;
+          text-align: right;
+      }
+
+      .diary-wrap-bg {
+          margin-top: 10px;
+          height: calc(100% - 50px);
+          background-image: url(/static/themes/diaryhub/static/img/bg.gif);
+          border-bottom: 1px solid #333;
+          border-top: 1px solid #333;
+      }
+
+
+      .left-control-wrap {
+          width: 100px;
+          float: left;
+          text-align: center;
+      }
+
+      .page-content-wrap {
+          height: 100%;
+          width: 86%;
+          margin: auto;
+
+
+      }
+
+      .content-item-wrap {
+          width: 100%;
+          color: #fff;
+          margin: 10px auto 0 auto;
+          padding: 0 10px;
+          box-sizing: border-box;
+      }
+
+      .content-item-wrap .time {
+          width:100%;
+          padding: 5px;
+          background: #3375A5;
+          box-sizing: border-box;
+      }
+
+      .content {
+          BACKGROUND-POSITION: left top;
+          COLOR: #005782;
+          font-family: "宋体";
+          FONT-SIZE: 14.8px;
+          LINE-HEIGHT: 24px;
+          TABLE-LAYOUT: fixed;
+          TEXT-ALIGN: left;
+          line-break: strict;
+          WORD-BREAK: break-word;
+      }
+
+
+
+      .author {
+          color: #666;
+          margin-top: 10px;
+          text-align: right;
+      }
+
+      .left-control-wrap {
+          width: 150px;
+          float: left;
+          height: 100%;
+          position: relative;
+      }
+
+      .right-content-wrap {
+          height: 100%;
+          width: calc(100% - 160px);
+          margin-left: 10px;
+          float: left;
+          border: 1px solid #999;
+          box-sizing: border-box;
+      }
+
+      .content-wrap {
+          width: 100%;
+          height: calc(100% - 50px);
+          overflow-y: auto;
+      }
+
+      .bottom-contol-wrap {
+          height: 50px;
+          background-color: rgb(255, 204, 0);
+          width: 100%;
+          margin: 0 auto 10px auto;
+          border: 1px solid #999;
+
+      }
+
+      .left-control-wrap .left-top-bg{
+          width: 100%;
+          background-image: url(/static/themes/diaryhub/static/img/bground.gif);
+          height: 30px;
+      }
+
+      .left-control-wrap .left-bottom-bg{
+          width: 100%;
+          background-image: url(/static/themes/diaryhub/static/img/bground.gif);
+          height: 50px;
+          position: absolute;
+          bottom:0;
+      }
+
+      .user-warp {
+          height: 120px;
+
+      }
+
+      #classify-wrap {
+          height: calc(100% - 230px);
+      }
+
+      .user-img {
+          width: 70px;
+          height: 70px;
+      }
+
+      .user-content {
+          margin-top: 10px;
+      }
+  </style>
+</head>
+<body>
+  <div class="page-wrap">
+    <div class="nav">
+      <h2 style="display: inline-block;margin: 0">开 发 者 日 记</h2>
+      <button id="write">写日记</button>
+    </div>
+
+    <div class="diary-wrap-bg">
+      <div class="page-content-wrap">
+        <div class="left-control-wrap">
+          <div class="left-top-bg">
+
+          </div>
+          <div class="user-warp">
+            #if(loginUser)
+            <div class="user-content">
+              <img src=" #(isBlank(loginUser.avatar) ? '/static/public/images/user.png': loginUser.avatar)?s=32" alt="" class="user-img">
+              <div>#(loginUser.userName)</div>
+            </div>
+
+            #else
+            <button id="login">登录</button>
+            #end
+
+          </div>
+          <img src="/static/themes/diaryhub/static/img/biao.jpg" alt="">
+          <div id="classify-wrap" class="ztree">
+
+          </div>
+          <div class="left-bottom-bg">
+
+          </div>
+        </div>
+        <div class="right-content-wrap">
+          <div class="content-wrap">
+            <div class="content-item-wrap">
+              <div class="time">
+                2022年11月13日
+              </div>
+              <div class="content">
+                4545455445544554545445454545454545544554455454455445
+
+              </div>
+              <div class="author">
+                [ 作者: <a href="">哈哈哈哈</a> ]
+              </div>
+            </div>
+
+          </div>
+          <div class="bottom-contol-wrap">
+            <input id="searchInput" type="text">
+            <button onclick="search()">搜索</button>
+            <button onclick="jump('prev')">上一页</button>
+            <button onclick="jump('next')">下一页</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+  <div id="drag" style="display: none">
+    <div class="title">
+      <h2>写日记</h2>
+      <div>
+        <a class="min" href="javascript:;" title="最小化"></a>
+        <a class="max" href="javascript:;" title="最大化"></a>
+        <a class="revert" href="javascript:;" title="还原"></a>
+        <a class="close" href="javascript:;" title="关闭"></a>
+      </div>
+    </div>
+    <div class="resizeL"></div>
+    <div class="resizeT"></div>
+    <div class="resizeR"></div>
+    <div class="resizeB"></div>
+    <div class="resizeLT"></div>
+    <div class="resizeTR"></div>
+    <div class="resizeBR"></div>
+    <div class="resizeLB"></div>
+    <div class="content">
+      <textarea id="diaryContent" style="width: 100%;height: 400px">
+
+      </textarea>
+      <div style="text-align: center">
+        <button onclick="tijiao()">提交</button>
+      </div>
+
+    </div>
+  </div>
+</body>
+</html>
+<script>
+  var page = 1
+  var pageTotal = 1
+  $(() => {
+
+    reqAllCateGory(0)
+    $('#write').on('click', () => {
+      $('#drag').show()
+    })
+
+    $('#login').on('click', () => {
+      window.location.href="/login";
+    })
+
+  })
+
+  function search() {
+    const value = $('#searchInput').val()
+    const cateGoryId = treeInstance.getSelectedNodes()
+    renderDocumentRight(cateGoryId[0].id, page, value)
+  }
+
+  function jump(type) {
+    const value = $('#searchInput').val()
+    const cateGoryId = treeInstance.getSelectedNodes()
+    if (type === 'next') {
+      page += 1
+    } else {
+      page -= 1
+    }
+    if (page < 0) {
+      page = 1
+    }
+
+    if (page > pageTotal) {
+      page = pageTotal
+    }
+
+
+    renderDocumentRight(cateGoryId[0].id, page, value)
+  }
+
+  function tijiao() {
+    const data = {
+      content: $('#diaryContent').val(),
+      title: 'test',
+      isComment: 1,
+      isTop: 0,
+      status: 0,
+      type: 'article'
+    }
+    $.ajax({
+      type: "POST",
+      url: "/admin/article/add",
+      contentType: "application/json",
+      data: JSON.stringify(data),
+      success: function (res) {
+        if (res.code) {
+          $('#diaryContent').val('')
+          $('#drag').hide()
+          renderDocumentRight('')
+        } else {
+          ZENG.msgbox.show(res.msg,5, 3000, 50);
+        }
+      },
+      error: function (data) {
+        ZENG.msgbox.show(res.msg,5, 3000, 50);
+      }
+    });
+  }
+
+  function deepChangeArr(uniqueId, data) {
+    return data.map(item => {
+      if (item.children && item.children.length) {
+        item.children = deepChangeArr(uniqueId, item.children)
+      } else {
+        delete item.children
+      }
+
+      return {
+        ...item,
+        text: item.name,
+        icon: '/static/themes/win98/static/img/folder-small-close-icon.png',
+        iconClose: '/static/themes/win98/static/img/folder-small-close-icon.png',
+        iconOpen: '/static/themes/win98/static/img/folder-small-open-icon.png',
+        url: '',
+        // parent: item.pid == -1 ? '#' : item.pid,
+      }
+    })
+  }
+
+  function reqAllCateGory(uniqueId) {
+    request({
+        config: {
+          url: '/api/category/getAllList',
+        },
+        target: '#classify-wrap',
+      }
+    ).then(res => {
+
+      renderCateGoryTree(uniqueId, res.data)
+    }).catch(error => {
+
+    })
+  }
+
+  const CateGorySetting = {
+    callback: {
+      onClick: (e, cateGoryId, data) => {
+        page = 1
+        $('#searchInput').val('')
+        renderDocumentRight(data.id)
+      },
+    }
+  }
+  function renderDocumentRight(id, page = 1, content ='') {
+    request({
+      config: {
+        url: '/api/article/list',
+        data: {
+          pageSize: 10,
+          categoryId: id,
+          pageIndex: page,
+          content
+        },
+      },
+      target: `.right-content-wrap`
+    }).then(res => {
+      pageTotal = Math.ceil(res.total / 10);
+      const html = createRightHtml(res.data)
+      $('.content-wrap').empty()
+      $('.content-wrap').append(html)
+    })
+  }
+
+  function createRightHtml(data) {
+    let html = ''
+    data.forEach(item => {
+      html += `<div class="content-item-wrap">
+              <div class="time">
+              <span>${item.createTime}</span>
+
+              </div>
+              <div class="content">
+                ${item.content}
+
+              </div>
+              <div class="author">
+                [ 作者: <a href="">${item.user.userName}</a> 标题: <span>${item.title}</span> ]
+              </div>
+            </div>`
+    })
+    return html
+  }
+
+  var treeInstance = null
+  function renderCateGoryTree(uniqueId, data) {
+    // data = data.filter(({ desc }) => !desc.includes('代码'))
+    data.unshift({
+      id: '0',
+      name: '全部',
+    })
+    const result = deepChangeArr(uniqueId, data)
+
+     treeInstance = $.fn.zTree.init($("#classify-wrap"), CateGorySetting, result);
+    var nodes = treeInstance.getNodes();
+
+    treeInstance.selectNode(nodes[0])
+    renderDocumentRight('')
+  }
+
+</script>
